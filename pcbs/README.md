@@ -7,7 +7,7 @@ If you want to fork the design, use the following links:
 ![Display Module](../images/display-module.jpg)
 * [BOM, Schematic and PCB files](https://oshwlab.com/fan4tix/IV-25-Dispaly)
 
-This PCB drives 8 tubes each. Each tube gets its own 74HC595 shift register, that sets the outputs of a TD62786 high side source driver, which in turn drives the actual tube. Each dot of each tube can be adressed by shifting in its value into the shift register. That way, multiple modules can be daisychained after another.
+This PCB drives 8 tubes each. Each tube gets its own 74HC595 shift register, that sets the outputs of a TD62783 high voltage source driver, which in turn drives the actual tube. Each dot of each tube can be adressed by shifting in its value into the shift register. That way, multiple modules can be daisychained after another.
 
 ## Controller Board
 ![Controller PCB](../images/controller.jpg)
