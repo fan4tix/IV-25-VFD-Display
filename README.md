@@ -56,3 +56,26 @@ Pinout:
 | 1   | 2   |         3         | 4   | 5   | 6   |
 |-----|-----|-------------------|-----|-----|-----|
 | +5V | IO9 | 47k Pullup to +5V | SCL | SDA | GND |
+
+## The Library
+
+The code is currently not in library form and needs to be converted to an Arduino Library. font.h specifies an array for the actual font data and a second array that stores the offsets of each ascii character inside the first array. In the font data array 0b11111111 is used to mark the end of a character, compareable to the "\0" at the end of a string. The constructor `IV25Display(uint16_t len, uint8_t latch, uint8_t data, uint8_t clock);` can be used to create a new display object and the method   `void print(char * str);` can be called to print an arbitrary string on the display. If you prefer setting individual bits of the display, you can pass a char array containing the raw data to be displayed to `void raw(char * str);`. Each byte corresponds to one IV-25 tube.
+
+``` C++
+#include "display.h"
+
+int latchPin = 13; //Pin connected to ST_CP of 74HC595
+int clockPin = 16; //Pin connected to SH_CP of 74HC595
+int dataPin = 14; //Pin connected to DS of 74HC595
+
+IV25Display dsp( 6 * 8, latchPin, dataPin, clockPin);
+
+void setup() {
+
+}
+
+void loop() {
+  dsp.print("Hello World!")
+  delay(1000);
+}
+```
