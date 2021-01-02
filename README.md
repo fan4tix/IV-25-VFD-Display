@@ -59,8 +59,9 @@ Pinout:
 | +5V | IO9 | 47k Pullup to +5V | SCL | SDA | GND |
 
 ## The Library
+font.h specifies an array for the actual font data and a second array that stores the offsets of each ASCII character inside the first array. In the font data array 0b11111111 is used to mark the end of a character, compareable to the "\0" at the end of a string. The constructor `IV25Display(uint16_t len, uint8_t latch, uint8_t data, uint8_t clock);` can be used to create a new display object and the method   `void print(char * str);` can be called to print an arbitrary string on the display. If you prefer setting individual bits of the display, you can pass a char array containing the raw data to be displayed to `void raw(char * str, uint16_t buf_len);`. Each byte corresponds to one IV-25 tube.
 
-The code is currently not in library form and needs to be converted to an Arduino Library. font.h specifies an array for the actual font data and a second array that stores the offsets of each ASCII character inside the first array. In the font data array 0b11111111 is used to mark the end of a character, compareable to the "\0" at the end of a string. The constructor `IV25Display(uint16_t len, uint8_t latch, uint8_t data, uint8_t clock);` can be used to create a new display object and the method   `void print(char * str);` can be called to print an arbitrary string on the display. If you prefer setting individual bits of the display, you can pass a char array containing the raw data to be displayed to `void raw(char * str, uint16_t buf_len);`. Each byte corresponds to one IV-25 tube.
+You can find sketches of a simple Hello World and for writing raw bytes to the display in the examples of the Library.
 
 ``` C++
 #include "display.h"
