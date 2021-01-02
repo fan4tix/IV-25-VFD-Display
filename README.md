@@ -22,16 +22,17 @@ Currently Working:
 * 5V and 3,3V Rails
 * USB-UART
 * Communication with Display Modules
+* MOSFET for switching cathode voltage
 
 Untested:
-* MOSFET for switching cathode voltage
 * Buttons
-* Maximum number of Display Modules that can be connected to the Controller without frying any traces
 
 The Controller Board is basically a NodeMCU-Board with USB-C and some other features needed for interfacing with the Display Modules.
 
 ### Power Supply
-It has a 12V power jack and screw terminal  protected by a fuse for supplying power to it. There is a 5V and a 3,3V regulator on the board that supplies the ESP8266 and the Logic of the display modules. For supplying power for the cathodes (2.4V) and anodes (25-30V) of the display modules, screw terminals can be used to connect step-up / step-down modules. This method was chosen over onboard step-up / step-down converters to be able to easily change the specs of the dc/dc converters as the power requirements can vary quite a bit depending on the number of connected display modules. The peak anode and cathode current the board can handle is to be determined.
+It has a 12V power jack and screw terminal  protected by a fuse for supplying power to it. There is a 5V and a 3,3V regulator on the board that supplies the ESP8266 and the Logic of the display modules. For supplying power for the cathodes (2.4V) and anodes (25-30V) of the display modules, screw terminals can be used to connect step-up / step-down modules. This method was chosen over onboard step-up / step-down converters to be able to easily change the specs of the dc/dc converters as the power requirements can vary quite a bit depending on the number of connected display modules.
+
+After some testing it seems like revision 1.0 of the PCB can handle about 6 modules before the current of the cathode gets too high. I'll try to increase the trace width and switch the cathode connector from a 2,54mm header to a screw terminal for the next revision to support up to 9 modules.
 
 ### Display Module Interface
 
@@ -59,7 +60,7 @@ Pinout:
 
 ## The Library
 
-The code is currently not in library form and needs to be converted to an Arduino Library. font.h specifies an array for the actual font data and a second array that stores the offsets of each ascii character inside the first array. In the font data array 0b11111111 is used to mark the end of a character, compareable to the "\0" at the end of a string. The constructor `IV25Display(uint16_t len, uint8_t latch, uint8_t data, uint8_t clock);` can be used to create a new display object and the method   `void print(char * str);` can be called to print an arbitrary string on the display. If you prefer setting individual bits of the display, you can pass a char array containing the raw data to be displayed to `void raw(char * str);`. Each byte corresponds to one IV-25 tube.
+The code is currently not in library form and needs to be converted to an Arduino Library. font.h specifies an array for the actual font data and a second array that stores the offsets of each ASCII character inside the first array. In the font data array 0b11111111 is used to mark the end of a character, compareable to the "\0" at the end of a string. The constructor `IV25Display(uint16_t len, uint8_t latch, uint8_t data, uint8_t clock);` can be used to create a new display object and the method   `void print(char * str);` can be called to print an arbitrary string on the display. If you prefer setting individual bits of the display, you can pass a char array containing the raw data to be displayed to `void raw(char * str, uint16_t buf_len);`. Each byte corresponds to one IV-25 tube.
 
 ``` C++
 #include "display.h"
@@ -67,15 +68,16 @@ The code is currently not in library form and needs to be converted to an Arduin
 int latchPin = 13; //Pin connected to ST_CP of 74HC595
 int clockPin = 16; //Pin connected to SH_CP of 74HC595
 int dataPin = 14; //Pin connected to DS of 74HC595
+int enablePin = 12; // Pin connected to the Cathode MOSFET
 
-IV25Display dsp( 6 * 8, latchPin, dataPin, clockPin);
+IV25Display dsp( 6 * 8, latchPin, dataPin, clockPin, enablePin);
 
 void setup() {
+  dsp.print("Hello World!");
 
 }
 
 void loop() {
-  dsp.print("Hello World!")
-  delay(1000);
+    delay(1000);
 }
 ```

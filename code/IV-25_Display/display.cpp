@@ -1,7 +1,8 @@
 #include "math.h"
 #include "display.h"
 #include "font.h"
-IV25Display::IV25Display(uint16_t len, uint8_t latch, uint8_t data, uint8_t clock) {
+
+IV25Display::IV25Display(uint16_t len, uint8_t latch, uint8_t data, uint8_t clock, uint8_t enable) {
 
   // Allocate RAM for screen buffer
   _buffer = (uint8_t *) malloc(len * sizeof(uint8_t));
@@ -11,13 +12,23 @@ IV25Display::IV25Display(uint16_t len, uint8_t latch, uint8_t data, uint8_t cloc
   _latch = latch;
   _data = data;
   _clock = clock;
+  _enable = enable;
 
   pinMode(_latch, OUTPUT);
   pinMode(_data, OUTPUT);
   pinMode(_clock, OUTPUT);
+  pinMode(_enable, OUTPUT);
 
+  this->enable(true);
 }
 
+void IV25Display::enable(uint8_t on){
+  if(on){
+    digitalWrite(_enable, HIGH);
+  } else {
+    digitalWrite(_enable, LOW);
+  }
+}
 void IV25Display::print(char * str) {
   // Put string into buffer
   clear_buffer();
@@ -46,13 +57,13 @@ void IV25Display::print(char * str) {
   this->write_buffer();
 }
 
-void IV25Display::raw(char * str) {
+void IV25Display::raw(char * str, uint16_t buf_len) {
   clear_buffer();
-  uint16_t len = min((uint16_t) strlen(str), _length);
-  Serial.print(len);
+  uint16_t len = min(buf_len, _length);
+
   uint16_t buffptr = 0;
   while (buffptr<len){
-    _buffer[buffptr] = str[buffptr];  
+    _buffer[buffptr] = str[buffptr];
     buffptr++;
   }
   this->write_buffer();
