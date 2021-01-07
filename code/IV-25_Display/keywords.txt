@@ -16,7 +16,10 @@ print KEYWORD2
 raw KEYWORD2
 clear KEYWORD2
 enable KEYWORD2
-
+dim KEYWORD2
+set_alignment KEYWORD2
+scroll KEYWORD2
+fully_scrolled KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
