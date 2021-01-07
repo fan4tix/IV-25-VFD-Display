@@ -9,4 +9,18 @@ IV25Display dsp(6 * 8, latchPin, dataPin, clockPin, enablePin);
 
 void setup() { dsp.print("Hello World!"); }
 
-void loop() { delay(2000); }
+void loop() {
+
+  for (int i = 0; i < 1024;) {
+    // Turn display on and off repeatedly
+    dsp.dim(i++);
+    delay(10);
+  }
+  delay(2000);
+  for (int i = 1024 - 1; i >= 0;) {
+    // Turn display on and off repeatedly
+    dsp.dim(i--);
+    delay(10);
+  }
+  delay(2000);
+}
